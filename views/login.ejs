@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Log in</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/public/plugins/fontawesome-free/css/all.min.css">
+  <!-- icheck bootstrap -->
+  <link rel="stylesheet" href="/public/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/public/dist/css/adminlte.min.css">
+</head>
+
+<body class="hold-transition login-page">
+  <div class="login-box">
+
+    <!-- /.login-logo -->
+    <div class="card">
+      <div class="card-body login-card-body">
+        <p class="login-box-msg">Login</p>
+
+        <form id="login-form">
+          <span class="passwordnotmatch" style="color:red;display: none;">Username or
+            Password doesn't match</span>
+          <span class="usernotverified" style="color:red;display: none; ">This email or password is Invalid.</span>
+          <span class="email-required" style="color:red; display: none;">Email is required</span>
+          <div class="input-group mb-3">
+            <input type="email" id="userid" class="form-control" placeholder="Email">
+            <div class="input-group-append">
+              <div class="input-group-text">
+                <span class="fas fa-envelope"></span>
+              </div>
+            </div>
+          </div>
+          <span class="password-required" style="color:red; display: none;">Password is required</span>
+
+          <div class="input-group mb-3">
+            <input type="password" id="password" class="form-control passwordShow" placeholder="Password">
+
+            <div class="input-group-append">
+              <div class="input-group-text pass_icon" id="toggle-password">
+                <span class="fas fa-eye-slash"></span>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-8">
+              <div class="icheck-primary">
+                <input type="checkbox" id="remember">
+                <label for="remember">
+                  Remember Me
+                </label>
+              </div>
+            </div>
+            <!-- /.col -->
+            <div class="col-4">
+              <button type="submit" class="btn btn-primary btn-block">Login</button>
+            </div>
+            <!-- /.col -->
+          </div>
+        </form>
+
+        <div class="social-auth-links text-center mb-3">
+
+          <a href="/google" class="btn btn-block btn-light">
+            <img style="width: 20px; height: 20px;" src="https://img.icons8.com/color/36/000000/google-logo.png">
+            Sign in using Google
+          </a>
+        </div>
+        <div class="social-auth-links text-center mb-3">
+
+          <a href="/microsoft" class="btn btn-block btn-light">
+            <img style="width: 20px; height: 20px;" src="https://img.icons8.com/color/36/000000/microsoft.png">
+            Sign up using Microsoft
+          </a>
+        </div>
+        <!-- /.social-auth-links -->
+        <!-- <p class="mb-1">
+          <a href="forgot-password.html">I forgot my password</a>
+        </p> -->
+        <p class="mb-3">
+          Create your account?
+          <a href="/signup" class="text-center ">Sign up </a>
+        </p>
+        <p class="mb-0 " style="font-size: 14px;">
+        
+          <a href="forgotpassword" class="text-center "> Forgot your password? </a>
+        </p>
+      </div>
+      <!-- /.login-card-body -->
+    </div>
+  </div>
+  <!-- /.login-box -->
+
+  <!-- jQuery -->
+  <script src="/public/plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="/public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="/public/dist/js/adminlte.min.js"></script>
+  <script type="text/javascript">
+    let elemEyeShow = '<i class="far fa-eye"></i>';
+    let elemEyeHide = '<i class="far fa-eye-slash"></i>';
+    $('.pass_icon').on('click', function () {
+      if ($('#password')[0].type == 'password') {
+        $('.pass_icon')[0].innerHTML = elemEyeShow;
+        $('#password')[0].type = 'text'
+      } else if ($('#password')[0].type == 'text') {
+        $('.pass_icon')[0].innerHTML = elemEyeHide;
+        $('#password')[0].type = 'password'
+      }
+    })
+    $('#login-form').on('submit', function (e) {
+      e.preventDefault();
+
+      if (!$('#userid')[0].value && !$('#password')[0].value) {
+
+
+        $('.email-required').show();
+        setTimeout(() => { $('.email-required').hide(); }, 5000)
+
+        $('.password-required').show();
+        setTimeout(() => { $('.password-required').hide(); }, 5000)
+
+
+        return;
+      }
+
+      if (!$('#userid')[0].value) {
+        $('.email-required').show();
+        setTimeout(() => { $('.email-required').hide(); }, 5000)
+        return;
+      }
+      if (!$('#password')[0].value) {
+        $('.password-required').show();
+        setTimeout(() => { $('.password-required').hide(); }, 5000)
+        return;
+      }
+
+      var formData = new FormData(e.target);
+
+      var formBody = [];
+
+      formData = {
+        userid: $('#userid')[0].value,
+        password: $('#password')[0].value
+      }
+      for (var property in formData) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(formData[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+      fetch('/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+        body: formBody
+      }).then((response) => {
+        response.json().then((data) => {
+          console.log(data)
+          if (data.status == 'valid login') {
+            window.location.href = `${data.url}`
+          } else if (data.status == 'No User') {
+            $('.usernotverified').show();
+            setTimeout(() => {
+              $('.usernotverified').hide();
+            }, 2000)
+          } else {
+            $('.passwordnotmatch').show();
+            setTimeout(() => {
+              $('.passwordnotmatch').hide();
+            }, 2000)
+          }
+        })
+      })
+    })
+  </script>
+
+
+  <script>
+
+  </script>
+
+</body>
+
+</html>

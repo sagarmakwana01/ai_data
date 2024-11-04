@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html class="bg-black">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reset Password</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/public/plugins/fontawesome-free/css/all.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="/public/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/public/dist/css/adminlte.min.css">
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="/public/plugins/bootstrap/css/bootstrap.min.css">
+    <style>
+        .toast {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1055;
+            display: none;
+            /* Hide initially */
+        }
+    </style>
+</head>
+
+<body class="hold-transition login-page">
+    <div class="login-box">
+        <div class="card">
+            <div class="card-body login-card-body">
+                <h4 class="header">Reset Password</h4>
+                <form action="/resetpassword/" method="post" id="reset-form"
+                    enctype="application/x-www-form-urlencoded">
+                    <div class="body">
+                        <input type="hidden" name="userId" id="userId" value="<%= userId %>">
+                        <input type="hidden" name="resetToken" id="resetToken" value="<%= resetToken %>">
+
+                        <span class="passwordlength" style="display:none;color:red;">Password length must be greater
+                            than 6</span>
+                        <span class="passwordstring" style="display:none;color:red;">Password should include characters,
+                            symbols, and numbers</span>
+                        <span class="password-required" style="color:red; display: none;">Password is required</span>
+                        <div class="form-group">
+                            <input type="password" name="newPassword" id="newpassword" class="form-control"
+                                placeholder="New Password" />
+                        </div>
+                        <div class="password-mismatch" style="color:red;display:none;">Passwords do not match. Please
+                            try again.</div>
+                        <span class="retypePassRequired" style="color:red; display: none;">Re-type Password is
+                            required</span>
+                        <div class="form-group">
+                            <input type="password" name="retypePassword" id="retypepassword" class="form-control"
+                                placeholder="Re-type Password" />
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <button type="submit" class="btn btn-primary btn-block">Reset Password</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Your password has been changed successfully.
+                </div>
+
+            </div>
+        </div>
+    </div> -->
+
+    <div class="toast bg-success text-white" role="alert" aria-live="assertive" aria-atomic="true" id="successToast">
+        <div class="d-flex">
+            <div class="toast-body">
+                Your password has been changed successfully.
+            </div>
+        </div>
+    </div>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="/public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script type="text/javascript">
+
+        let regextomatch = /^(?=(.*[a-zA-Z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{6,}$/;
+        $('#reset-form').on('submit', function (e) {
+            e.preventDefault();
+
+
+            $('.password-required, .retypePassRequired, .passwordlength, .passwordstring, .password-mismatch').hide();
+
+
+            if (!$('#newpassword')[0].value && !$('#retypepassword')[0].value) {
+
+
+                $('.password-required').show();
+                setTimeout(() => { $('.password-required').hide(); }, 5000);
+
+                $('.retypePassRequired').show();
+                setTimeout(() => { $('.retypePassRequired').hide(); }, 5000);
+
+                return;
+            }
+
+
+            // Get values
+            const newPassword = $('#newpassword').val();
+            const retypePassword = $('#retypepassword').val();
+
+            // Validate new password length
+            if (newPassword.length < 6) {
+                $('.passwordlength').show();
+                setTimeout(() => { $('.passwordlength').hide(); }, 5000);
+                return; // Stop submission
+            }
+
+            // Validate password complexity
+            if (newPassword.match(regextomatch) == null) {
+                $('.passwordstring').show();
+                setTimeout(() => { $('.passwordstring').hide(); }, 5000);
+                return; // Stop submission
+            }
+
+            // Check if passwords match
+            if (newPassword !== retypePassword) {
+                $('.password-mismatch').show();
+                return;
+            } else {
+                $('.password-mismatch').hide();
+            }
+
+            // Proceed to submit the form via AJAX
+            $.ajax({
+                type: 'POST',
+                url: '/resetpassword/',
+                data: $(this).serialize(),
+                success: function (response) {
+                    if (response.message === 'Password changed successfully.') {
+                        // Show the success modal
+                        showToast();
+
+                        // Redirect to login page when OK is clicked
+                        setTimeout(() => {
+                            window.location.href = '/login';
+                        }, 4000);
+                    } else {
+
+                        alert(response.message);
+                    }
+                },
+                error: function (jqXHR) {
+                    alert(jqXHR.responseJSON.message);
+                }
+            });
+        });
+
+        function showToast() {
+            const toast = document.getElementById('successToast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, 100); // Delay to ensure display is active before adding the class
+            setTimeout(hideToast, 4000); // Hide toast after 5 seconds
+        }
+
+        function hideToast() {
+            const toast = document.getElementById('successToast');
+            toast.classList.remove('show');
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 500); // Wait for the fade-out transition
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AdminLTE 3 | Dashboard</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="/public/plugins/fontawesome-free/css/all.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Tempusdominus Bootstrap 4 -->
+  <link rel="stylesheet" href="/public/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+  <!-- iCheck -->
+  <link rel="stylesheet" href="/public/plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+  <!-- JQVMap -->
+  <link rel="stylesheet" href="/public/plugins/jqvmap/jqvmap.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="/public/dist/css/adminlte.min.css">
+  <!-- overlayScrollbars -->
+  <link rel="stylesheet" href="/public/plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
+  <!-- Daterange picker -->
+  <link rel="stylesheet" href="/public/plugins/daterangepicker/daterangepicker.css">
+  <!-- summernote -->
+  <link rel="stylesheet" href="/public/plugins/summernote/summernote-bs4.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+  
+<div class="wrapper">
+
+  <!-- Preloader -->
+  <div class="preloader flex-column justify-content-center align-items-center">
+    <img class="animation__shake" src="/public/dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
+  </div>
+
+  <!-- Navbar -->
+  <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+    <!-- Left navbar links -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="index3.html" class="nav-link">Home</a>
+      </li>
+      <li class="nav-item d-none d-sm-inline-block">
+        <a href="#" class="nav-link">Contact</a>
+      </li>
+    </ul>
+
+    <!-- Right navbar links -->
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+          <i class="fas fa-expand-arrows-alt"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" data-widget="control-sidebar" data-controlsidebar-slide="true" href="#" role="button">
+          <i class="fas fa-th-large"></i>
+        </a>
+      </li>
+
+   <!-- Profile Dropdown in Navbar using Bootstrap 4 -->
+   <div class="dropdown mr-3">
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="profileDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+     Admin
+    </button>
+    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="profileDropdown">
+      <a class="dropdown-item" href="#">
+        <i class="fas fa-user mr-2"></i> 
+        <%= locals?.user?.name %> 
+      </a>
+      <% if (locals?.user?.provider === 'local') { %>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="/change-password">
+          <i class="fas fa-key mr-2"></i> 
+          Change Password
+        </a>  
+      <% } %>
+      
+      <div class="dropdown-divider"></div>
+      <form action="/" method="post" id="logoutForm">
+        <button type="button" id="logoutPage" class="dropdown-item">
+          <i class="fas fa-sign-out-alt mr-2"></i> 
+          Logout
+        </button>
+      </form>
+    </div>
+  </div>
+ 
+  <!-- Notifications Dropdown Menu -->
+      <!-- <li class="nav-item mr-4">
+        <form action="/" method="post" id="logoutForm">
+          <button type="button" id="logoutPage" class=" btn btn-danger text-light">Logout</button>
+        </form>
+      </li> -->
+    </ul>
+  </nav>
+
+
+  <!-- /.navbar -->
+
+  <!-- Main Sidebar Container -->
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <!-- Brand Logo -->
+    <a href="index3.html" class="brand-link">
+      <img src="/public/dist/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <span class="brand-text font-weight-light">AdminLTE 3</span>
+    </a>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <!-- Sidebar user panel (optional) -->
+      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+        <div class="image">
+          <img src="/public/dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
+        </div>
+        <div class="info">
+          <a href="#" class="d-block"><%= locals?.user?.name %></a>
+        </div>
+      </div>
+
+      <!-- SidebarSearch Form -->
+      <div class="form-inline">
+        <div class="input-group" data-widget="sidebar-search">
+          <input class="form-control form-control-sidebar" type="search" placeholder="Search" aria-label="Search">
+          <div class="input-group-append">
+            <button class="btn btn-sidebar">
+              <i class="fas fa-search fa-fw"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar Menu -->
+      <nav class="mt-2">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          <!-- Add icons to the links using the .nav-icon class
+               with font-awesome or any other icon font library -->
+          <li class="nav-item menu-open">
+            <a href="#" class="nav-link active">
+              <i class="nav-icon fas fa-tachometer-alt"></i>
+              <p>
+                Dashboard
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="./index.html" class="nav-link active">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Dashboard v1</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+       
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-chart-pie"></i>
+              <p>
+                Charts
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="pages/charts/chartjs.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>ChartJS</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/charts/flot.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Flot</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/charts/inline.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Inline</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="pages/charts/uplot.html" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>uPlot</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <!-- /.sidebar-menu -->
+    </div>
+    <!-- /.sidebar -->
+  </aside>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Dashboard</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard v1</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Small boxes (Stat box) -->
+        <div class="row">
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-info">
+              <div class="inner">
+                <h3>150</h3>
+
+                <p>New Orders</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-bag"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-success">
+              <div class="inner">
+                <h3>53<sup style="font-size: 20px">%</sup></h3>
+                <p>Bounce Rate</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-stats-bars"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning">
+              <div class="inner">
+                <h3>44</h3>
+
+                <p>User Registrations</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-person-add"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+          <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-danger">
+              <div class="inner">
+                <h3>65</h3>
+
+                <p>Unique Visitors</p>
+              </div>
+              <div class="icon">
+                <i class="ion ion-pie-graph"></i>
+              </div>
+              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            </div>
+          </div>
+          <!-- ./col -->
+        </div>
+        <!-- /.row -->
+        <!-- Main row -->
+       
+        <!-- /.row (main row) -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  <footer class="main-footer">
+    <strong>Copyright &copy; 2014-2021 <a href="https://adminlte.io">AdminLTE.io</a>.</strong>
+    All rights reserved.
+    <div class="float-right d-none d-sm-inline-block">
+      <b>Version</b> 3.2.0
+    </div>
+  </footer>
+
+  <!-- Control Sidebar -->
+  <aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+  </aside>
+  <!-- /.control-sidebar -->
+</div>
+<!-- ./wrapper -->
+<!-- Logout Button -->
+
+
+<!-- Bootstrap Logout Confirmation Modal -->
+<div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> <!-- This button will close the modal -->
+      </div>
+      <div class="modal-body">
+        Are you sure you want to logout?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-danger" id="confirmLogout">Yes, Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- change pass -->
+<div class="modal fade" id="ChangePassword" tabindex="-1" aria-labelledby="exampleModalLabe4" aria-hidden="true">
+  <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+              <h5 class="modal-title" id="ChangePassword">Change Password</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <form id="changePassForm">
+                  <div class="row mb-4 align-items-center">
+                      <div class="col-lg-3">
+                          <label for="change_old_password" class="fw-semibold">Old Password: </label>
+                      </div>
+                      <div class="col-lg-9 generate-pass">
+                          <div class="input-group field">
+                              <div class="input-group-text"><i class="feather-key"></i></div>
+                              <input type="password" class="form-control password" value="" id="change_old_password"
+                                  placeholder=" Old Password" name="old_password">
+                              <div class="input-group-text border-start bg-gray-2 c-pointer show-pass">
+                                  <i></i>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row mb-4 align-items-center">
+                      <div class="col-lg-3">
+                          <label for="change_new_password" class="fw-semibold">New Password: </label>
+                      </div>
+                      <div class="col-lg-9 generate-pass">
+                          <div class="input-group field">
+                              <div class="input-group-text"><i class="feather-key"></i></div>
+                              <input type="password" class="form-control password" value="" id="change_new_password"
+                                  placeholder="New Password" name="new_password">
+                              <div class="input-group-text border-start bg-gray-2 c-pointer show-pass">
+                                  <i></i>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="row mb-4 align-items-center">
+                      <div class="col-lg-3">
+                          <label for="change_new_password_conf" class="fw-semibold">Confirm New Password: </label>
+                      </div>
+                      <div class="col-lg-9 generate-pass">
+                          <div class="input-group field">
+                              <div class="input-group-text"><i class="feather-key"></i></div>
+                              <input type="password" class="form-control password" value=""
+                                  id="change_new_password_conf" placeholder="Confirm New Password"
+                                  name="new_password_confirm">
+                              <div class="input-group-text border-start bg-gray-2 c-pointer show-pass">
+                                  <i></i>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary" id="submitButtonPassword">
+                          Submit
+                          <div class="spinner-border text-light ms-2" role="status" id="spinnerLoaderPassword"
+                              style="display: none;">
+                              <span class="visually-hidden">Loading...</span>
+                          </div>
+                      </button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- change pass -->
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<!-- jQuery -->
+<script src="/public/plugins/jquery/jquery.min.js"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="/public/plugins/jquery-ui/jquery-ui.min.js"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button)
+</script>
+<!-- Bootstrap 4 -->
+<script src="/public/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- ChartJS -->
+<script src="/public/plugins/chart.js/Chart.min.js"></script>
+<!-- Sparkline -->
+<script src="/public/plugins/sparklines/sparkline.js"></script>
+<!-- JQVMap -->
+<script src="/public/plugins/jqvmap/jquery.vmap.min.js"></script>
+<script src="/public/plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
+<!-- jQuery Knob Chart -->
+<script src="/public/plugins/jquery-knob/jquery.knob.min.js"></script>
+<!-- daterangepicker -->
+<script src="/public/plugins/moment/moment.min.js"></script>
+<script src="/public/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- Tempusdominus Bootstrap 4 -->
+<script src="/public/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js"></script>
+<!-- Summernote -->
+<script src="/public/plugins/summernote/summernote-bs4.min.js"></script>
+<!-- overlayScrollbars -->
+<script src="/public/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
+<!-- AdminLTE App -->
+<script src="/public/dist/js/adminlte.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="/public/dist/js/demo.js"></script>
+<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
+<script src="/public/dist/js/pages/dashboard.js"></script>
+<script>
+
+</script>
+
+
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+      const changePass = document.getElementById("changePassForm")
+      $("#change_old_password").on("keyup", (e) => {
+          if ($(e.target).val() == "") {
+              $(e.target).addClass("is-invalid");
+          } else {
+              $(e.target).removeClass("is-invalid");
+          }
+      })
+      let newPassVal = ""
+      $("#change_new_password").on("keyup", (e) => {
+          newPassVal = $(e.target).val()
+          if ($(e.target).val() == "") {
+              $(e.target).addClass("is-invalid");
+          } else {
+              $(e.target).removeClass("is-invalid");
+          }
+      })
+      $("#change_new_password_conf").on("keyup", (e) => {
+          if ($(e.target).val() == "" || newPassVal != $(e.target).val()) {
+              $(e.target).addClass("is-invalid");
+          } else {
+              $(e.target).removeClass("is-invalid");
+          }
+      })
+
+      changePass.addEventListener("submit", async (e) => {
+          e.preventDefault()
+          if ($("#change_old_password").val() == "") {
+              $("#change_old_password").addClass("is-invalid");
+              return;
+          }
+          if ($("#change_new_password").val() == "") {
+              $("#change_new_password").addClass("is-invalid");
+              return;
+          }
+          if ($("#change_new_password_conf").val() == "") {
+              $("#change_new_password_conf").addClass("is-invalid");
+              return;
+          }
+          const form = new FormData(e.target).entries()
+          let objForm = Object.fromEntries(form)
+          if (objForm.old_password.trim() == "") {
+              $("#change_old_password").addClass("is-invalid");
+              alert("All this password is required");
+              return;
+          }
+          if (objForm.new_password.trim() == "") {
+              $("#change_new_password").addClass("is-invalid");
+              alert("All this password is required");
+              return;
+          }
+          if (objForm.new_password_confirm.trim() == "") {
+              $("#change_new_password_conf").addClass("is-invalid");
+              alert("All this password is required");
+              return;
+          }
+          if (objForm.new_password.trim() !== objForm.new_password_confirm.trim()) {
+              $("#change_new_password_conf").addClass("is-invalid");
+              alert("Password confirmation failed");
+              return;
+          }
+          try {
+              let response = await fetch("/change", {
+                  method: "post",
+                  headers: {
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify(objForm)
+              })
+              
+              if (response.ok) {
+                  let data = await response.json()
+                  if (data?.statusCode == 200) {
+                      // Hide the modal on successful submission
+                      window.showSuccessToast(data?.message)
+                      changePass.reset()
+                      const modalElement = document.getElementById('ChangePassword');
+                      const modalInstance = bootstrap.Modal.getInstance(modalElement);
+                      newPassVal = ""
+                      modalInstance?.hide();
+                  } else {
+                      alert(data?.message)
+                  }
+              } else {
+                  alert(error?.message || "something went wrong");
+              }
+          } catch (error) {
+              console.log(error)
+              alert(error?.message || "something went wrong");
+          }
+      })
+      //password hide show
+      // document.querySelectorAll('.input-group-text').forEach(toggleButton => {
+      //     toggleButton.addEventListener('click', function () {
+      //         // Find the closest password input field
+      //         const showPasswordAndHide = this.closest('.input-group').querySelector('.showAndHidePassword');
+
+      //         const passwordType = showPasswordAndHide.getAttribute('type') === 'password' ? 'text' : 'password';
+      //         showPasswordAndHide.setAttribute('type', passwordType);
+
+      //         // Toggle the eye icon class
+      //         this.querySelector('i').classList.toggle('feather-eye');
+      //         this.querySelector('i').classList.toggle('feather-eye-off');
+      //     });
+      // });
+  })
+
+</script>
+
+
+
+
+
+
+<script>
+  // Show the Bootstrap modal when logout button is clicked
+  $(document).ready(function () {
+  // Show the Bootstrap modal when logout button is clicked
+  $('#logoutPage').on('click', function (e) {
+    e.preventDefault(); // Prevent form submission
+    $('#logoutModal').modal('show'); // Show the modal using Bootstrap 4's jQuery method
+  });
+
+  // Handle the "Yes, Logout" button inside the modal
+  $('#confirmLogout').on('click', function () {
+    $('#logoutForm').submit(); // Submit the form after confirmation
+  });
+});
+
+
+  document.querySelector('.btn-close').addEventListener('click', function () {
+    $('#logoutModal').modal('hide'); // Close the modal using Bootstrap 4's jQuery method
+  });
+</script>
+</body>
+</html>

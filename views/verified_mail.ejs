@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Site Monitoring</title>
+	<!-- <link rel="icon" href="/assets/img/favicon.ico" type="image/x-icon" sizes="any"> -->
+	<style type="text/css">
+		.container {margin: 20px auto;max-width: 300px;}
+		.email-verified-div {text-align: center;padding: 10px;border-radius: 10px;}
+		.verified-box-shadow{box-shadow: 0px 7px 61px 2px rgb(0 0 0 / 75%);-webkit-box-shadow: 0px 7px 61px 2px rgb(0 0 0 / 75%);-moz-box-shadow: 0px 7px 61px 2px rgba(0,0,0,0.75);}
+		.verified-valid {display: none;background: green;padding: 47px;border-radius: 50%;margin: 50px;}
+		.un-verified {display: none;background: #a91212;padding: 51px;border-radius: 50%;margin: 50px;}
+		.verified-valid span {font-size: 64px;color: #ffffff;}
+		.un-verified span {font-size: 65px;color: #ffffff;font-weight: 800;}
+		.email-verified-text h3{display: none;}
+	</style>
+</head>
+<body>
+	
+	<div class="container">
+		<div class="email-verified-div">
+			<div class="verified-valid verified-box-shadow">
+				<span>&#10003;</span>
+			</div>
+			<div class="un-verified verified-box-shadow">
+				<span>&#215;</span>
+			</div>
+			<div class="email-verified-text">
+				<h3 class="verified">Your Email Has Verified Successfully<br/>Go to <a href="/login">Login Page</a></h3>
+				<h3 class="already-verified">Your Email Has Already Verified<br/>
+					Go to <a href="/login">Login Page</a></h3>
+				<h3 class="unverified">This link is expied please sign up again.</h3>
+				<a href="/signup">Signup</a>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		let verification = `<%- locals.status %>`;
+		console.log(verification)
+		if(verification == 'not verified'){
+			document.querySelector('.un-verified').style.display = 'block';
+			document.querySelector('.unverified').style.display = 'block';
+		}else if(verification == 'already verified'){
+			document.querySelector('.verified-valid').style.display = 'block';
+			document.querySelector('.already-verified').style.display = 'block';
+		}else{
+			document.querySelector('.verified').style.display = 'block';
+			document.querySelector('.verified-valid').style.display = 'block';
+		}
+
+	</script>
+</body>
+</html>
