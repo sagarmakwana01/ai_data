@@ -23,7 +23,45 @@ model User {
   provider    String  @default("local")
   passwordResetToken  String?   
   passwordResetExpires DateTime?
+  role        Role?   @default(User)        
+  block        Block?   @default(No)  
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt      
 }
+
+enum Role {
+  User
+  Admin
+}
+
+enum Block {
+  Yes
+  No
+}
+
+model UserData {
+  id                    Int      @id @default(autoincrement())
+  firstName             String
+  lastName              String
+  roleTitle             String
+  company               String
+  linkedinUrl           String  @unique
+  email                 String  
+  phone                 String
+  location              String
+  industry              String
+  companyEmployeeRange  Int?
+  tags                  String?
+  stages                String?
+  namePrefix            String?
+  middleName            String?
+  gender                String?
+  roleInHeader          String?
+  category              String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+}
+
 
 enum Track {
   Yes
