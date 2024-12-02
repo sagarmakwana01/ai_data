@@ -1,6 +1,6 @@
 const LocalStratagy = require('passport-local').Strategy
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const FacebookStrategy = require('passport-facebook').Strategy;
+// const FacebookStrategy = require('passport-facebook').Strategy;
 const MicrosoftStrategy  = require("passport-microsoft").Strategy;
 
 const prisma = require('../prisma/index')
@@ -34,7 +34,7 @@ function init(passport) {
 
 
   passport.use('admin-local',new LocalStratagy({ usernameField: 'userid' }, async (userid, password, done) => {
-    const user = await prisma.User.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email: userid,
       },
@@ -44,12 +44,11 @@ function init(passport) {
       return done(null, false, { message: "No Admin Found" })
     }
 
-    if(user.user_role == 'USER'){
+    if(user.role == 'User'){
       return done(null, false, { message: "No Admin Found" })
     }
-
-    const isCorrectpassword = CryptoJS.AES.decrypt(user.user_password, process.env.CRYPTO_SEC_KET).toString(CryptoJS.enc.Utf8) === password;
-
+// console.log(user,password)
+    const isCorrectpassword = CryptoJS.AES.decrypt(user.password, process.env.CRYPTO_SEC_KET).toString(CryptoJS.enc.Utf8) === password;
     if(isCorrectpassword){
       return done(null, user, { message: "Logged in Succesfully" })
     }else{
