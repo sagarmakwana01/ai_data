@@ -4,12 +4,34 @@ const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const protected = require('../middleware/protected');
 const { setFlash } = require('../utils/flash');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const router = express.Router();
 const userController = require('../controller/userController');
 
+// Multer setup for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+      cb(null, Date.now() + path.extname(file.originalname));
+  }
+});
+const upload = multer({ storage: storage });
+
+// Ensure the uploads folder exists
+if (!fs.existsSync('uploads')) {
+  fs.mkdirSync('uploads');
+}
 
 // router.post('/', protected, userController.postLogout);
 router.get('/',protected,userController.getUserhome);
+router.get('/importfile',protected,userController.importFile);
+router.get('/datatable',protected,userController.userDataTable);
+router.get('/fetchTable',protected,userController.fetchUserTableData);
+router.get('/users',protected,userController.getUserTable);
 router.get('/signup',auth, userController.getSignup);
 router.post('/signup',auth, userController.postSignup);
 router.get('/verify-email/:token', userController.getEmailverify);
@@ -22,6 +44,12 @@ router.post('/forgotpassword', auth, userController.postPasswordforget);
 router.post('/resetpassword', auth, userController.postNewPassword);
 router.get('/change-password',userController.getChangePass);
 router.post("/change",userController.postChangePass)
+router.get("/user/details/:id",userController.viewUserOne)
+router.post('/user/edit/:id', userController.editUserRecord);
+router.delete('/delete/:id', userController.deleteUser);
+router.delete('/delete-user/:id', userController.deleteUserSingle);
+router.post('/upload-excel', upload.single('excelFile'),userController.postUploadFile)
+router.post('/update-block-status',userController.updateBlock)
 
 // router.post('/sitesmonitor-admin/login', adminauth, userController.postAdminlogin);
 // router.post('/checkemailexist', userController.postCheckemailexist);
@@ -46,6 +74,12 @@ router.get('/nameadd', (req, res) => {
 
 router.get('/auth/google/callback', (req, res, next) => {
   passport.authenticate('google', { failureRedirect: '/login' }, async (err, user, info) => {
+
+ 
+    if(info){
+      setFlash(res, 'error', info?.message || 'connect admin');
+    }
+
     if (err) {
       setFlash(res, 'error', info?.message || 'An error occurred');
       return res.redirect('/login');
